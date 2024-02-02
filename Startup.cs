@@ -1,0 +1,215 @@
+using NLog.Web;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
+using System.Reflection;
+using Microsoft.Extensions.Options;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using GAT.Resources;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Routing.Internal;
+using Microsoft.AspNetCore.Mvc.Versioning;
+
+// using GAT.Controllers;
+// using GAT.Data;
+// using GAT.Domain;
+// using GAT.Domain.Implementation;
+// using GAT.Middleware;
+// using GAT.Services;
+// using GAT.Services.Implementation;
+// using GAT.Integrations.Validations.Implementation;
+// using GAT.Integrations.Services;
+// using GAT.Integrations.Domain;
+// using GAT.Integrations.Services.Implementation;
+// using GAT.Integrations.Validations;
+// using GAT.Integrations.Domain.Implementation;
+// using GAT.Validations;
+// using GAT.Validations.Implementation;
+// using GAT.Settings.Services;
+// using GAT.Settings.Services.Implementation;
+// using GAT.Settings.Repository;
+// using GAT.Settings.Repository.Implementation;
+// using GAT.Settings.Helpers;
+
+namespace GAT_Integrations
+{
+    public class Startup
+    {
+        //public Startup(IConfiguration configuration, ILogger logger)
+        //{
+        //    //Configuration = configuration;        
+        //}
+
+        //public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // services.AddLocalization(options =>
+            // {
+            //     options.ResourcesPath = "Resources";
+            // });
+            // services.AddSingleton<CommonLocalization>();
+
+            // services.Configure<RequestLocalizationOptions>(options =>
+            // {
+            //     var supportedCultures = new List<CultureInfo>
+            //         {
+            //             new CultureInfo("en-US")
+            //         };
+
+            //     options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
+            //     options.SupportedCultures = supportedCultures;
+            //     options.SupportedUICultures = supportedCultures;
+            //     //options.RequestCultureProviders = new[] { new RouteDataRequestCultureProvider { IndexOfCulture = 1, IndexofUICulture = 1 } };
+            // });
+
+            var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+            {
+                ContentRootPath = System.IO.Directory.GetCurrentDirectory()
+            });
+
+            services.AddMvc()
+              .AddViewLocalization()
+              .AddDataAnnotationsLocalization();
+
+            services.Configure<ApiBehaviorOptions>(obj =>
+            {
+                obj.InvalidModelStateResponseFactory = actionContext =>
+                {
+                    return new BadRequestObjectResult(new
+                    {
+                        Code = 400,
+                        Message = string.Join(',', actionContext.ModelState.Values.SelectMany(x => x.Errors)
+                            .Select(x => x.ErrorMessage))
+                    });
+                };
+            });
+
+            // NLog: Setup NLog for Dependency injection
+            builder.Logging.ClearProviders();
+            builder.Host.UseNLog();
+
+            builder.Services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GAT", Version = "v1" });
+            });
+            
+            // configure strongly typed settings object
+            //services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
+            // configure DI for application services
+            // services.AddScoped<IUserService, UserService>();
+
+            //if clients need output as xml then uncomment below line
+            //services.AddMvc().AddMvcOptions(o => { o.OutputFormatters.Add(new Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter()); });
+            // services.AddDbContext<GigAndTakeDbContext>();
+            // services.AddDbContext<UserContext>();
+            // services.AddScoped<ILoginService, LoginService>();
+            // services.AddScoped<ILoginRepository, LoginRepository>();
+            // services.AddScoped<ICompanyService, CompanyService>();
+            // services.AddScoped<ICompanyRepository, CompanyRepository>();
+            // services.AddScoped<IShiftService, ShiftService>();
+            // services.AddScoped<IShiftRepository, ShiftRepository>();
+            // services.AddScoped<IShiftSwapService, ShiftSwapService>();
+            // services.AddScoped<IShiftSwapRepository, ShiftSwapRepository>();
+            // services.AddScoped<IWorkCenterService, WorkCenterService>();
+            // services.AddScoped<IWorkCenterRepository, WorkCenterRepository>();
+            // services.AddScoped<ILocationService, LocationService>();
+            // services.AddScoped<ILocationRepository, LocationRepository>();
+            // services.AddScoped<IJobService, JobService>();
+            // services.AddScoped<IJobSkillService, JobSkillService>();
+            // services.AddScoped<ISkillService, SkillService>();
+            // services.AddScoped<IJobRepository, JobRepository>();
+            // services.AddScoped<IJobSkillRepository, JobSkillRepository>();
+            // services.AddScoped<ISkillRepository, SkillRepository>();
+            // services.AddScoped<IWorkerService, WorkerService>();
+            // services.AddScoped<IWorkerSettingService, WorkerSettingService>();
+            // services.AddScoped<IWorkerRepository, WorkerRepository>();
+            // services.AddTransient<ITwilioHelperService, TwilioHelperService>();
+            // services.AddTransient<IEmailService, EmailService>();
+            // services.AddTransient<IPushNotificationService, FcmPushNotificationService>();
+            // services.AddScoped<IUserRepository, UserRepository>();
+            // services.AddScoped<IReportRepository, ReportRepository>();
+            // services.AddScoped<IWorkerNotificationRepository, WorkerNotificationRepository>();
+            // services.AddScoped<IReportService, ReportService>();
+            // services.AddScoped<INotificationService, NotificationService>();
+            // services.AddScoped<IGatTaskSchedulerService, GatHangfireTaskSchedulerService>();
+            // services.AddScoped<IShiftAllocationService, ShiftAllocationService>();
+            // services.AddScoped<IRShiftsService, RShiftsService>();
+            // services.AddScoped<IRShiftsRepository, RShiftsRepository>();
+            // services.AddScoped<IScheduleValidationService, ScheduleValidationService>();
+            // services.AddScoped<IWorkerValidation, WorkerValidation>();
+            // services.AddScoped<ICoreWorkersService, CoreWorkersService>();
+            // services.AddScoped<ICoreWorkerValidation, CoreWorkerValidation>();
+            // services.AddScoped<ICoreWorkersRepository, CoreWorkersRepository>();
+            // services.AddScoped<IRShiftValidation, RShiftValidation>();
+            // services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            // services.AddScoped<ISkillsMatrixService, SkillsMatrixService>();
+            // services.AddScoped<ISkillsMatrixRepository, SkillsMatrixRepository>();
+            // services.AddScoped<ILocationValidation, LocationValidation>();
+            // services.AddScoped<ISettingsService, SettingsService>();
+            // services.AddScoped<ISettingsRepository, SettingsRepository>();
+            // services.AddScoped<AddOrUpdateSettingsHelper, AddOrUpdateSettingsHelper>();
+
+            services.AddControllers();
+
+            services.AddApiVersioning(opt =>
+                                    {
+                                        opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1,0);
+                                        opt.AssumeDefaultVersionWhenUnspecified = true;
+                                        opt.ReportApiVersions = true;
+                                        opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
+                                                                                        new HeaderApiVersionReader("x-api-version"),
+                                                                                        new MediaTypeApiVersionReader("x-api-version"));
+                                    });
+
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            var localizeOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(localizeOptions.Value);
+
+            // Configure the HTTP request pipeline.
+            if (!env.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            if (env.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GAT v1"));
+                app.UseDeveloperExceptionPage();
+            }
+
+            //app.UseStatusCodePages(); //display status code as text            
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
+            // custom jwt auth middleware
+            // app.UseMiddleware<JwtMiddleware>();
+
+            app.UseEndpoints(cfg =>
+            {
+                cfg.MapControllers();
+            });
+        }
+    }
+}
