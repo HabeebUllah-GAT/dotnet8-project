@@ -1,7 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.Localization;
 
-namespace GAT_Integrations.Resources
+namespace GATIntegrations.Resources
 {
     public class CommonLocalization
     {

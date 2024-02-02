@@ -1,4 +1,4 @@
-namespace GAT_Integrations.Resources
+namespace GATIntegrations.Resources
 {
     public class Resource
     {

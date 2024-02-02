@@ -1,4 +1,4 @@
-namespace GAT_Integrations;
+namespace GATIntegrations;
 
 public class WeatherForecast
 {

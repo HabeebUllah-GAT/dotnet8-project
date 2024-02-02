@@ -9,7 +9,7 @@ using System.Reflection;
 using Microsoft.Extensions.Options;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
-using GAT_Integrations.Resources;
+using GATIntegrations.Resources;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
@@ -38,7 +38,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 // using GAT.Settings.Repository.Implementation;
 // using GAT.Settings.Helpers;
 
-namespace GAT_Integrations
+namespace GATIntegrations
 {
     public class Startup
     {
@@ -177,7 +177,7 @@ namespace GAT_Integrations
             builder.Services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GAT_Integrations", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GATIntegrations", Version = "v1" });
             });
         }
 

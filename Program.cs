@@ -1,7 +1,7 @@
 using NLog;
 using NLog.Web;
 
-namespace GAT_Integrations;
+namespace GATIntegrations;
 
 public class Program
 {

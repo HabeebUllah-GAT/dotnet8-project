@@ -1,7 +1,7 @@
-using GAT_Integrations.Resources;
+using GATIntegrations.Resources;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GAT_Integrations.Controllers;
+namespace GATIntegrations.Controllers;
 
 [ApiController]
 [Route("[controller]")]

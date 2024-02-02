@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <!-- The below line needs to be updated to false in .Net8, For ref: https://github.com/dotnet/SqlClient/issues/2239 -->
     <InvariantGlobalization>false</InvariantGlobalization>
-    <RootNamespace>GAT_Integrations</RootNamespace>
+    <RootNamespace>GATIntegrations</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
