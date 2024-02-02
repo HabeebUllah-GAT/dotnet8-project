@@ -9,12 +9,13 @@ using System.Reflection;
 using Microsoft.Extensions.Options;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
-using GAT.Resources;
+using GAT_Integrations.Resources;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Routing.Internal;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 // using GAT.Controllers;
 // using GAT.Data;
@@ -51,33 +52,41 @@ namespace GAT_Integrations
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddLocalization(options =>
-            // {
-            //     options.ResourcesPath = "Resources";
-            // });
-            // services.AddSingleton<CommonLocalization>();
+            services.AddSingleton<CommonLocalization>();
 
-            // services.Configure<RequestLocalizationOptions>(options =>
-            // {
-            //     var supportedCultures = new List<CultureInfo>
-            //         {
-            //             new CultureInfo("en-US")
-            //         };
+            services.AddLocalization(options =>
+            {
+                options.ResourcesPath = "Resources";
+            });
 
-            //     options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
-            //     options.SupportedCultures = supportedCultures;
-            //     options.SupportedUICultures = supportedCultures;
-            //     //options.RequestCultureProviders = new[] { new RouteDataRequestCultureProvider { IndexOfCulture = 1, IndexofUICulture = 1 } };
-            // });
+            services.AddMvc()
+              .AddViewLocalization()
+              .AddDataAnnotationsLocalization(options =>
+              {
+                  options.DataAnnotationLocalizerProvider = (type, factory) =>
+                  {
+                      var assemblyName = new AssemblyName(typeof(Resource).GetTypeInfo().Assembly.FullName);
+                      return factory.Create(nameof(Resource), assemblyName.Name);
+                  };
+              });
+
+            var supportedCultures = new List<CultureInfo>
+            {
+                new CultureInfo("en-US")
+            };
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+                //options.RequestCultureProviders = new[] { new RouteDataRequestCultureProvider { IndexOfCulture = 1, IndexofUICulture = 1 } };
+            });
 
             var builder = WebApplication.CreateBuilder(new WebApplicationOptions
             {
                 ContentRootPath = System.IO.Directory.GetCurrentDirectory()
             });
-
-            services.AddMvc()
-              .AddViewLocalization()
-              .AddDataAnnotationsLocalization();
 
             services.Configure<ApiBehaviorOptions>(obj =>
             {
@@ -96,12 +105,6 @@ namespace GAT_Integrations
             builder.Logging.ClearProviders();
             builder.Host.UseNLog();
 
-            builder.Services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GAT", Version = "v1" });
-            });
-            
             // configure strongly typed settings object
             //services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
@@ -163,7 +166,7 @@ namespace GAT_Integrations
 
             services.AddApiVersioning(opt =>
                                     {
-                                        opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1,0);
+                                        opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
                                         opt.AssumeDefaultVersionWhenUnspecified = true;
                                         opt.ReportApiVersions = true;
                                         opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
@@ -171,14 +174,16 @@ namespace GAT_Integrations
                                                                                         new MediaTypeApiVersionReader("x-api-version"));
                                     });
 
+            builder.Services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GAT_Integrations", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var localizeOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
-            app.UseRequestLocalization(localizeOptions.Value);
-
             // Configure the HTTP request pipeline.
             if (!env.IsDevelopment())
             {
@@ -196,6 +201,10 @@ namespace GAT_Integrations
 
             //app.UseStatusCodePages(); //display status code as text            
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
+
+            app.UseRequestLocalization(app.ApplicationServices.GetRequiredService < IOptions < RequestLocalizationOptions >> ().Value);
 
             app.UseRouting();
 

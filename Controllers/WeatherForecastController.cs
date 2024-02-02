@@ -1,3 +1,4 @@
+using GAT_Integrations.Resources;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GAT_Integrations.Controllers;
@@ -12,16 +13,21 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
+    private readonly CommonLocalization _lc;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, CommonLocalization lc)
     {
         _logger = logger;
+        _lc = lc;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
         _logger.LogInformation("GetWeatherForecast");
+        Console.WriteLine(_lc.Getstr("Error.CoreWorkersRepository.CreateWorker.InvalidWorkerTypeId"));
+        Console.WriteLine(_lc.Get("Error.CoreWorkersRepository.CreateWorker.InvalidWorkerTypeId"));
+
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
