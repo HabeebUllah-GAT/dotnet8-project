@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Routing.Internal;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc.Razor;
+using GATIntegrations.Data;
 
 // using GAT.Controllers;
 // using GAT.Data;
@@ -113,54 +114,8 @@ namespace GATIntegrations
 
             //if clients need output as xml then uncomment below line
             //services.AddMvc().AddMvcOptions(o => { o.OutputFormatters.Add(new Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter()); });
-            // services.AddDbContext<GigAndTakeDbContext>();
-            // services.AddDbContext<UserContext>();
-            // services.AddScoped<ILoginService, LoginService>();
-            // services.AddScoped<ILoginRepository, LoginRepository>();
-            // services.AddScoped<ICompanyService, CompanyService>();
-            // services.AddScoped<ICompanyRepository, CompanyRepository>();
-            // services.AddScoped<IShiftService, ShiftService>();
-            // services.AddScoped<IShiftRepository, ShiftRepository>();
-            // services.AddScoped<IShiftSwapService, ShiftSwapService>();
-            // services.AddScoped<IShiftSwapRepository, ShiftSwapRepository>();
-            // services.AddScoped<IWorkCenterService, WorkCenterService>();
-            // services.AddScoped<IWorkCenterRepository, WorkCenterRepository>();
-            // services.AddScoped<ILocationService, LocationService>();
-            // services.AddScoped<ILocationRepository, LocationRepository>();
-            // services.AddScoped<IJobService, JobService>();
-            // services.AddScoped<IJobSkillService, JobSkillService>();
-            // services.AddScoped<ISkillService, SkillService>();
-            // services.AddScoped<IJobRepository, JobRepository>();
-            // services.AddScoped<IJobSkillRepository, JobSkillRepository>();
-            // services.AddScoped<ISkillRepository, SkillRepository>();
-            // services.AddScoped<IWorkerService, WorkerService>();
-            // services.AddScoped<IWorkerSettingService, WorkerSettingService>();
-            // services.AddScoped<IWorkerRepository, WorkerRepository>();
-            // services.AddTransient<ITwilioHelperService, TwilioHelperService>();
-            // services.AddTransient<IEmailService, EmailService>();
-            // services.AddTransient<IPushNotificationService, FcmPushNotificationService>();
-            // services.AddScoped<IUserRepository, UserRepository>();
-            // services.AddScoped<IReportRepository, ReportRepository>();
-            // services.AddScoped<IWorkerNotificationRepository, WorkerNotificationRepository>();
-            // services.AddScoped<IReportService, ReportService>();
-            // services.AddScoped<INotificationService, NotificationService>();
-            // services.AddScoped<IGatTaskSchedulerService, GatHangfireTaskSchedulerService>();
-            // services.AddScoped<IShiftAllocationService, ShiftAllocationService>();
-            // services.AddScoped<IRShiftsService, RShiftsService>();
-            // services.AddScoped<IRShiftsRepository, RShiftsRepository>();
-            // services.AddScoped<IScheduleValidationService, ScheduleValidationService>();
-            // services.AddScoped<IWorkerValidation, WorkerValidation>();
-            // services.AddScoped<ICoreWorkersService, CoreWorkersService>();
-            // services.AddScoped<ICoreWorkerValidation, CoreWorkerValidation>();
-            // services.AddScoped<ICoreWorkersRepository, CoreWorkersRepository>();
-            // services.AddScoped<IRShiftValidation, RShiftValidation>();
-            // services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            // services.AddScoped<ISkillsMatrixService, SkillsMatrixService>();
-            // services.AddScoped<ISkillsMatrixRepository, SkillsMatrixRepository>();
-            // services.AddScoped<ILocationValidation, LocationValidation>();
-            // services.AddScoped<ISettingsService, SettingsService>();
-            // services.AddScoped<ISettingsRepository, SettingsRepository>();
-            // services.AddScoped<AddOrUpdateSettingsHelper, AddOrUpdateSettingsHelper>();
+
+            services.AddDbContext<GigAndTakeDbContext>();
 
             services.AddControllers();
 

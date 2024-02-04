@@ -1,5 +1,8 @@
+using GATIntegrations.Data;
+using GATIntegrations.Data.EFEntity;
 using GATIntegrations.Resources;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GATIntegrations.Controllers;
 
@@ -13,12 +16,14 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
+    private readonly GigAndTakeDbContext _dbContext;
     private readonly CommonLocalization _lc;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, CommonLocalization lc)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, CommonLocalization lc, GigAndTakeDbContext db)
     {
         _logger = logger;
         _lc = lc;
+        _dbContext = db;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
@@ -35,5 +40,11 @@ public class WeatherForecastController : ControllerBase
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         })
         .ToArray();
+    }
+
+    [HttpGet("GetWorkerType", Name = "GetWorkerType")]
+    public IEnumerable<LuWorkerType> GetWorkerType()
+    {
+        return [.. _dbContext.LuWorkerType];
     }
 }
