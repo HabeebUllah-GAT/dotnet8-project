@@ -45,6 +45,6 @@ public class WeatherForecastController : ControllerBase
     [HttpGet("GetWorkerType", Name = "GetWorkerType")]
     public IEnumerable<LuWorkerType> GetWorkerType()
     {
-        return [.. _dbContext.LuWorkerType];
+        return [.. _dbContext.LuWorkerType.Where(x => x.IsActive).ToArray()];
     }
 }
