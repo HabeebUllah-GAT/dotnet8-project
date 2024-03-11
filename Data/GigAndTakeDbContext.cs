@@ -25,6 +25,16 @@ namespace GATIntegrations.Data
         public DbSet<LuWorkerType> LuWorkerType { get; set; }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LuWorkerType>(entity =>
+            {
+                entity.ToTable("LuWorkerType", tb => tb.HasTrigger("trg_LuWorkerType"));
+            });
+
+            OnModelCreatingPartial(modelBuilder);
+        }
     }
 
 }
